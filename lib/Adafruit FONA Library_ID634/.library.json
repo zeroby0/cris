@@ -1,0 +1,46 @@
+{
+    "description": "Arduino library for the Adafruit FONA", 
+    "repository": {
+        "url": "https://github.com/adafruit/Adafruit_FONA", 
+        "type": "git"
+    }, 
+    "platforms": [
+        "atmelavr", 
+        "atmelsam", 
+        "espressif8266", 
+        "intel_arc32", 
+        "microchippic32", 
+        "nordicnrf51", 
+        "teensy", 
+        "timsp430"
+    ], 
+    "export": {
+        "exclude": [
+            "extras", 
+            "docs", 
+            "tests", 
+            "test", 
+            "*.doxyfile", 
+            "*.pdf"
+        ], 
+        "include": null
+    }, 
+    "authors": [
+        {
+            "maintainer": true, 
+            "name": "Adafruit", 
+            "url": null, 
+            "email": "info@adafruit.com"
+        }
+    ], 
+    "keywords": [
+        "communication"
+    ], 
+    "id": 634, 
+    "name": "Adafruit FONA Library", 
+    "frameworks": [
+        "arduino"
+    ], 
+    "version": "1.3.2", 
+    "homepage": "https://github.com/adafruit/Adafruit_FONA_Library"
+}
