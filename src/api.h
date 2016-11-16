@@ -53,9 +53,11 @@ class API{
     bool sendSMS_custom(char*, char*);
     unsigned short int getNum(char, char);
 
+    void saveState();
+
     typedef struct Auth_creds {
       int isInit; // default value is 0, so false
-      // 16 bits, all 
+      // 16 bits, all
       char AuthNumber[14];
       char AuthPass[4];
     } Auth_creds;

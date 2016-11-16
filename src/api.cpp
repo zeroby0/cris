@@ -1,8 +1,10 @@
 #include <EEPROM.h>
-#include "string.h"
+#include <string.h>
 #include "Arduino.h"
 #include "Adafruit_FONA.h"
 #include "api.h"
+
+using namespace std;
 
 extern Adafruit_FONA fona;
 extern char replybuffer[];
@@ -17,7 +19,7 @@ API::API(){
     this->clearEEPROM();
     this->clearSMS();
 
-    
+
   }
 }
 API::~API(){}
@@ -25,15 +27,16 @@ API::~API(){}
 
 /********* AUTH number ********************************************/
 char*  API::getAuthNumber(){
-  return "+918095074504";
+  return AUTH.AuthNumber;
 }
 
 // private
 bool API::setAuthNumber(char* t_number){
 
+  strcpy(AUTH.AuthNumber, t_number);
   EEPROM.put(AUTH_Addr, this->AUTH);
-
 }
+
 
 bool API::isAuthMessage(uint8_t t_id){
 
@@ -59,6 +62,7 @@ bool API::clearSMS(){
   } return true;
 }
 
+// private
 bool API::sendSMS_custom(char* number, char* message){
 
   if (!fona.sendSMS( number, message)) {
@@ -175,4 +179,10 @@ void API::blink(){
   delay(700);
   digitalWrite(13, LOW);
   delay(100);
+}
+
+/********* Persistance ********************************************/
+
+void API::saveState(){
+  EEPROM.put(AUTH_Addr, this->AUTH);
 }

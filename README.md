@@ -1,10 +1,11 @@
 # Cris
 Arduino and GSM based remote irrigation system, intended to be a cheaper replacement to existing commercial solutions
 
-# Goals
-Enable the user to remotely monitor and control irrigation systems  
-Make the device affordable enough to cater to a wide userbase  
-Provide a simple interface to control as well as extend the product  
-Support plugin architecture and provide a high level API to make development easy and portable
+Remotely monitor and control your systems. Simple, affordable and extensible.
 
----
+
+# development
+Clone this repository using `git clone https://github.com/zeroby0/cris.git`. This is a complete [platformio](http://platformio.org) project folder, open in platformio IDE and start hacking!  
+Source code is available in `src/`, `lib/` has libraries required by the project.  Using Adafruit FONA library at [https://github.com/adafruit/Adafruit_FONA](https://github.com/adafruit/Adafruit_FONA).
+
+# 
