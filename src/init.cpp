@@ -66,7 +66,7 @@ void loop()
   smsn = api->getNumberofSMS();
   if(smsn > 0 && api->isAuthMessage(smsn) ){
     api->send("Recd and Auth");
-    api->parseMessage(smsn);
+    api->parse(smsn);
 
   }if(smsn){ api->send("Clearing SMS"); api->clearSMS(); }
   api->send("Skip");

@@ -12,7 +12,7 @@ extern char replybuffer[];
 void API::send(char * message){
   Serial.println(message);
 }
-/********* AUTH number ********************************************/
+
 API::API(){
   EEPROM.get(AUTH_Addr, AUTH);
   if(! (this->AUTH).isInit ){
@@ -32,9 +32,9 @@ char*  API::getAuthNumber(){
 
 // private
 bool API::setAuthNumber(char* t_number){
-
   strcpy(AUTH.AuthNumber, t_number);
   EEPROM.put(AUTH_Addr, this->AUTH);
+  return true;
 }
 
 
@@ -99,16 +99,7 @@ bool API::getMessageText(uint8_t t_id, char t_buffer[]){
 }
 
 
-/********* PARSE ********************************************/
-void API::parse(char t_buffer[]){
-  this->getTime(t_buffer);
-  this->sendSMS(t_buffer);
-  Serial.println(t_buffer);
-}
-void API::parseMessage(uint8_t t_id){
-  this->getMessageText(t_id, replybuffer);
-  this->parse(replybuffer);
-}
+
 /********* LOCAL ********************************************/
 void API::checkStatus(){
   uint8_t n = fona.getNetworkStatus();
@@ -170,7 +161,7 @@ unsigned short int API::getNum(char t_A, char t_B){
 
 /********* OTHER ********************************************/
 void API::blink(){
-  Serial.println("Blink Blink");
+  send("Blink Blink");
   digitalWrite(13, HIGH);
   delay(300);
   digitalWrite(13, LOW);
@@ -185,4 +176,15 @@ void API::blink(){
 
 void API::saveState(){
   EEPROM.put(AUTH_Addr, this->AUTH);
+}
+
+/********* PARSE ********************************************/
+void API::parseMessage(char t_buffer[]){
+  this->getTime(t_buffer);
+  this->sendSMS(t_buffer);
+  Serial.println(t_buffer);
+}
+void API::parse(uint8_t t_id){
+  this->getMessageText(t_id, replybuffer);
+  
 }

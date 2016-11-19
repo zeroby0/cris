@@ -34,11 +34,15 @@ class API{
     void checkStatus();
 
     // processing
-    void parse(char*);
-    void parseMessage(uint8_t);
+    void parseMessage(char*);
+    void parse(uint8_t);
     virtual ~API();
 
     // Persistance
+
+
+    // bufferProvided by API
+    //char buffer[255];
 
 
 
