@@ -5,6 +5,7 @@ class API{
     API();
     // comm
     void send(char*);
+    void lsend(char*);
     void send(uint8_t);
     void send(const char*);
     void alert(char*);

@@ -3,6 +3,7 @@
 #include "Arduino.h"
 #include "Adafruit_FONA.h"
 #include "api.h"
+#include "cmd.h"
 
 using namespace std;
 
@@ -12,6 +13,10 @@ extern Adafruit_FONA fona;
 void API::send(char * message){
   // casual debug messages
   Serial.println(message);
+}
+
+void API::lsend(char * message){
+  Serial.print(message);
 }
 
 void API::send(const char* message){
@@ -218,9 +223,13 @@ uint8_t API::getAUTH_Addr(){
 
 /********* PARSE ********************************************/
 void API::parseMessage(const char t_buffer[]){
+
   Serial.println(t_buffer);
 
-  
+  uint8_t command = (t_buffer[0] - '0') * 100  + (t_buffer[1]  - '0') * 10  + (t_buffer[2] - '0' ) * 1;
+
+  CMD cmd;
+  cmd.execute(command, t_buffer);
 
 }
 
