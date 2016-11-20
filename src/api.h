@@ -5,6 +5,9 @@ class API{
     API();
     // comm
     void send(char*);
+    void send(uint8_t);
+    void send(const char*);
+    void alert(char*);
 
     // AUTH number
     char* getAuthNumber();
@@ -34,7 +37,7 @@ class API{
     void checkStatus();
 
     // processing
-    void parseMessage(char*);
+    void parseMessage(const char*);
     void parse(uint8_t);
     virtual ~API();
 
@@ -42,13 +45,9 @@ class API{
 
 
     // bufferProvided by API
-    //char buffer[255];
+    char api_buffer[255];
 
-
-
-
-
-
+    uint8_t getAUTH_Addr();
 
   private:
     bool updateNeeded = false;
@@ -63,10 +62,10 @@ class API{
       int isInit; // default value is 0, so false
       // 16 bits, all
       char AuthNumber[14];
-      char AuthPass[4];
+      char AuthPass[5];
     } Auth_creds;
     Auth_creds AUTH;
-    uint8_t AUTH_Addr = 10;
+    uint8_t AUTH_Addr;
 
 
 

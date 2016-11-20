@@ -7,20 +7,54 @@
 using namespace std;
 
 extern Adafruit_FONA fona;
-extern char replybuffer[];
+
 /********* COMM ********************************************/
 void API::send(char * message){
+  // casual debug messages
   Serial.println(message);
 }
 
+void API::send(const char* message){
+  Serial.println(message);
+}
+
+void API::send(uint8_t number){
+  Serial.println(number);
+}
+
+void API::alert(char * message){
+  // Alert the user
+  Serial.print( "ALERT: ");
+  Serial.print(message);
+}
+
+// API
 API::API(){
+  send("[API Init]");
+  AUTH_Addr = 10;
+
+  Auth_creds AUTH = {1, "0", "0"};
+
+  // Initial setup
+  // AUTH.isInit = 1;
+  // strcpy(AUTH.AuthNumber, "+918095074504");
+  // strcpy(AUTH.AuthPass ,"1234");
+  //EEPROM.put(AUTH_Addr, AUTH);
+
   EEPROM.get(AUTH_Addr, AUTH);
-  if(! (this->AUTH).isInit ){
+
+  this->AUTH =  AUTH;
+
+  if( (this->AUTH).isInit  == 0){
+    //send("OOOOOOOOOOOOOOOOO");
     this->clearEEPROM();
-    this->clearSMS();
-
-
   }
+
+  sprintf(api_buffer, "%d %s\n", AUTH.isInit, AUTH.AuthNumber);
+  send(api_buffer);
+
+
+
 }
 API::~API(){}
 
@@ -40,8 +74,8 @@ bool API::setAuthNumber(char* t_number){
 
 bool API::isAuthMessage(uint8_t t_id){
 
-  this->getSenderNumber(t_id, replybuffer);
-  if( ( ! strcmp( replybuffer, this->getAuthNumber() ) )  ){
+  this->getSenderNumber(t_id, api_buffer);
+  if( ( ! strcmp( api_buffer, this->getAuthNumber() ) )  ){
     return true;
   } return false;
 }
@@ -161,7 +195,7 @@ unsigned short int API::getNum(char t_A, char t_B){
 
 /********* OTHER ********************************************/
 void API::blink(){
-  send("Blink Blink");
+  send("[Blink Blink]");
   digitalWrite(13, HIGH);
   delay(300);
   digitalWrite(13, LOW);
@@ -178,13 +212,50 @@ void API::saveState(){
   EEPROM.put(AUTH_Addr, this->AUTH);
 }
 
-/********* PARSE ********************************************/
-void API::parseMessage(char t_buffer[]){
-  this->getTime(t_buffer);
-  this->sendSMS(t_buffer);
-  Serial.println(t_buffer);
+uint8_t API::getAUTH_Addr(){
+  return AUTH_Addr;
 }
-void API::parse(uint8_t t_id){
-  this->getMessageText(t_id, replybuffer);
+
+/********* PARSE ********************************************/
+void API::parseMessage(const char t_buffer[]){
+  Serial.println(t_buffer);
+
   
+
+}
+
+void API::parse(uint8_t t_id){
+
+  send("[parsing]");
+  this->getMessageText(t_id, api_buffer);
+
+  if( (this->AUTH).isInit  == 0){
+    if( !strcmp("INIT", api_buffer) ){
+      send("{Setting up for the first time}");
+      AUTH.isInit = 1;
+      getSenderNumber(t_id, api_buffer);
+      strcpy( AUTH.AuthNumber , api_buffer );
+
+      sprintf(AUTH.AuthPass, "%d", random(1001, 9999) );
+
+      saveState();
+      sprintf(api_buffer, "%s %s\n", "Initialised succesfully! Use this number to send instructions from now on. Your password is " , AUTH.AuthPass);
+      sendSMS(api_buffer);
+
+      send("{Clearing SMS}");
+      clearSMS();
+      sprintf(api_buffer, "[ Done, number: %s ;password: %s; ]\n", AUTH.AuthNumber, AUTH.AuthPass);
+      send(api_buffer);
+      return;
+
+    }
+  }
+
+  else if( isAuthMessage(t_id) ){
+    send("{Message from Auth number}");
+    this->getMessageText(t_id, api_buffer);
+    parseMessage(api_buffer);
+  }
+
+  return;
 }

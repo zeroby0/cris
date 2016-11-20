@@ -4,6 +4,7 @@
 #include "string.h"
 
 
+
 #include "init.h"
 #include "api.h"
 
@@ -26,36 +27,46 @@ Adafruit_FONA fona = Adafruit_FONA(FONA_RST);
 // Use this one for FONA 3G
 //Adafruit_FONA_3G fona = Adafruit_FONA_3G(FONA_RST);
 
-API* api = new API();
+API* api;
 
 
 /*____________________________________________________________________________*/
 void setup()
 {
-  //while(1);
+
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, LOW); // keep turned off; use only to indicate
+  randomSeed(analogRead(0));
+
+
 
   //uncomment to prevent code from running till serial is available
   //while (!Serial);
 
+  digitalWrite(13, LOW);
+
   Serial.begin(115200);
-  api->send("Serial connection started");
+  Serial.println("{{Start}}");
+  api = new API();
+
+  // to reset
+  // api->clearEEPROM();
+  // api->send("Cleared");
+  // while(1);
+
+  api->send("{Serial connection started}");
+
 
   fonaSerial->begin(4800);
   if (! fona.begin(*fonaSerial)) {
     // couldn't find GSM Sheild
-    api->send("couldn't find GSM Sheild");
+    api->send("[couldn't find GSM Sheild]");
     while (1);
   }
 
-  api->send("Init");
-  //clearEEPROM();
+  // TODO see if any messages are received from AuthNumber when offline
   api->clearSMS();
-  //sendSMS("Hey");
-  api->send("Cleared texts");
-  delay(3000);
-
+  api->send("{Setup complete}");
 }
 
 
@@ -63,16 +74,18 @@ void setup()
 void loop()
 {
 
+  digitalWrite(LED_BUILTIN, LOW);
   smsn = api->getNumberofSMS();
-  if(smsn > 0 && api->isAuthMessage(smsn) ){
-    api->send("Recd and Auth");
+
+  if(smsn > 0){
+    api->send("{Message received}");
     api->parse(smsn);
+    api->send("{Clearing SMS}");
+    api->clearSMS();
+    api->send("[done]");
+  }
 
-  }if(smsn){ api->send("Clearing SMS"); api->clearSMS(); }
-  api->send("Skip");
-  // TODO make Arduino sleep to conserve power
+
+  api->send("}\n \n{");
   delay(1000);
-
-
-
 }
