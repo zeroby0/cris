@@ -36,11 +36,14 @@ void setup()
 
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, LOW); // keep turned off; use only to indicate
-  randomSeed(analogRead(0));
+  randomSeed(analogRead(0));  // genarate random seed
+  // to use in password generation, if required.
 
 
 
   //uncomment to prevent code from running till serial is available
+  // don't uncomment in production
+  // module wont start until serial is available
   //while (!Serial);
 
   digitalWrite(13, LOW);
@@ -57,6 +60,7 @@ void setup()
   api->send("{Serial connection started}");
 
 
+  // COMM with GSM module
   fonaSerial->begin(4800);
   if (! fona.begin(*fonaSerial)) {
     // couldn't find GSM Sheild
@@ -65,7 +69,7 @@ void setup()
   }
 
   // TODO see if any messages are received from AuthNumber when offline
-  api->clearSMS();
+  api->clearSMS(); // clear all sms in sim
   api->send("{Setup complete}");
 }
 
@@ -77,6 +81,10 @@ void loop()
   digitalWrite(LED_BUILTIN, LOW);
   smsn = api->getNumberofSMS();
 
+  /* check if any sms arrived
+   * if yes, send it for parsing
+   * clear sms so that any new sms has id 0
+   */
   if(smsn > 0){
     api->send("{Message received}");
     api->parse(smsn);

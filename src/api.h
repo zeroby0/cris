@@ -38,7 +38,7 @@ class API{
     void checkStatus();
 
     // processing
-    void parseMessage(const char*);
+    void parseMessage(const char*);  // consider making this private
     void parse(uint8_t);
     virtual ~API();
 
@@ -58,6 +58,13 @@ class API{
     unsigned short int getNum(char, char);
 
     void saveState();
+
+    /* 
+     * The AUTH object
+     * stores the authorised mobile number
+     * the pin set for the module
+     * and if the module has been initiated
+     */
 
     typedef struct Auth_creds {
       int isInit; // default value is 0, so false

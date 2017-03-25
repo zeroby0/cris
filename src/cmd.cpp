@@ -1,11 +1,33 @@
+/* 
+ * The command object
+ * Add your custom functions here
+ *
+ * to add foo(),
+ * create a case, before `default` case
+ *
+ * case 010:
+ *      foo(); // optionally, arguments
+ *      break;
+ *
+ * then create a CMD::foo() down below
+ *
+ * `return type` CMD:foo( `args` ){
+      // mama mia!
+      // itsa me, Mario!
+    }
+ *
+ *
+ */
+
+
 #include "Arduino.h"
 #include "API.h"
 #include "cmd.h"
 
 extern API* api;
 
-uint8_t CMD::execute(uint8_t command, const char buffer[]){
-  api->lsend("called\n");
+uint8_t CMD::execute(uint8_t command, const char buffer[]){  // message text in  arg: `buffer`
+  api->lsend("called\n"); //dBug
   api->send(command);
 
   switch( command ){
@@ -21,6 +43,9 @@ uint8_t CMD::execute(uint8_t command, const char buffer[]){
     case 004:
               motor_on_after();
               break;
+    // case 080:
+    //           foo();
+    //           break;
     default:
               api->send("Unknown command");
               break;
@@ -43,3 +68,7 @@ void CMD::motor_on_for(){
 void CMD::motor_on_after(){
   api->lsend("(motor on after abc)\n");
 }
+
+// void CMD::foo(){
+//   //api->send('Hola!\n');
+// }

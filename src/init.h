@@ -3,7 +3,6 @@
 #define FONA_RST 4
 
 
-
 uint8_t smsn;
 
 

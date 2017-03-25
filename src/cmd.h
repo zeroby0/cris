@@ -1,3 +1,6 @@
+/*
+ * cmd.cpp for docs
+ */
 class CMD{
   public:
     uint8_t execute(uint8_t, const char*);
