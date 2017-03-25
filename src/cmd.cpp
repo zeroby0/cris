@@ -16,7 +16,8 @@
       // itsa me, Mario!
     }
  *
- *
+ * to call your function foo(), id = xyz from sms,
+ * send sms `xyz args`
  */
 
 
@@ -44,7 +45,7 @@ uint8_t CMD::execute(uint8_t command, const char buffer[]){  // message text in 
               motor_on_after();
               break;
     // case 080:
-    //           foo();
+    //           foo(buffer);
     //           break;
     default:
               api->send("Unknown command");
@@ -69,6 +70,8 @@ void CMD::motor_on_after(){
   api->lsend("(motor on after abc)\n");
 }
 
-// void CMD::foo(){
-//   //api->send('Hola!\n');
+// void CMD::foo(const char buffer[]){   
+     // api->send('Hola!\n');
+     // sms "080 hello foo bar" calls me
+     // buffer[] contains the full message text
 // }
